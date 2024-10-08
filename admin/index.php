@@ -37,8 +37,8 @@ if (isset($_SESSION['message'])) {
                             <th class="p-2">No</th>
                             <th>Foto</th>
                             <th>Nama</th>
-                            <th>Deskripsi</th>
                             <th>Harga</th>
+                            <th>Deskripsi</th>
                             <th class="w-[5rem]"></th>
                         </tr>
                     </thead>
@@ -54,9 +54,11 @@ if (isset($_SESSION['message'])) {
                                 echo "<tr>";
                                 echo "<td class='p-2'>" . $no++ . "</td>";
                                 echo "<td><img src='" . htmlspecialchars($row["image"]) . "' class='w-24' alt='Product Image'></td>";
-                                echo "<td>" . htmlspecialchars($row["name"]) . "</td>";
-                                echo "<td>" . htmlspecialchars($row["description"]) . "</td>";
                                 echo "<td>Rp." . htmlspecialchars($row["price"]) . "</td>";
+                                echo "<td>" . htmlspecialchars($row["name"]) . "</td>";
+                                echo "<td>" . ((strlen($row['description']) > 30)
+                                    ? mb_substr($row['description'], 0, 30) . "..."
+                                    : $row['description']) . "</td>";
                                 echo "<td class='flex gap-2'> 
                                         <a href='edit_product.php?id=" . htmlspecialchars($row["id"]) . "' class='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-xs'>Edit</a>
                                         <a href='delete_product.php?id=" . htmlspecialchars($row["id"]) . "' class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-xs'>Delete</a> 

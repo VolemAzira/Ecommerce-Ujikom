@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <?php include 'header.php'; ?>
 
-    <main class="min-h-screen m-10 flex flex-col items-center">
+    <main class="m-10 flex flex-col items-center">
         <section class="lg:w-1/2 w-full flex flex-col gap-5">
             <h2 class="text-2xl font-bold">Purchase Summary</h2>
             <div class="flex gap-10 justify-between">

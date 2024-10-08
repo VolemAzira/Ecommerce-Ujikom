@@ -44,25 +44,25 @@ $currentCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
 
     <?php include 'header.php' ?>
 
-    <main class="min-h-screen m-10 flex flex-col gap-5">
+    <main class="min-h-screen m-10 flex flex-col gap-10">
         <div class="text-3xl font-bold capitalize">
             <h1>Hay, <?php echo $_SESSION['username']; ?>! Welcome to our store</h1>
             <p>We Selling fresh fruits and veggies!</p>
         </div>
-
-
         <section class="flex justify-between">
             <!-- Product grid -->
             <div class="flex gap-5 flex-wrap">
                 <?php foreach ($products as $product): ?>
-                    <div class="border-2 rounded-xl shadow overflow-hidden">
+                    <div class="border-2 rounded-xl shadow overflow-hidden max-w-[20rem]">
                         <img src="<?php
                                     $str = substr($product['image'], 1);
                                     echo $str;
                                     ?>"
                             class="w-[20rem] h-[12rem]" alt="<?php echo $product['name']; ?>">
                         <div class="p-5 flex flex-col gap-2">
-                            <h5 class="text-xl font-bold"><?php echo $product['name']; ?></h5>
+                            <h5 class="text-xl font-bold"><?php echo $product['name']; ?>
+                                <span class="text-green-500">Rp.<?php echo $product['price']; ?></span>
+                            </h5>
                             <p class=" text-gray-500 text-sm">
                                 <?php
                                 echo (strlen($product['description']) > 100)
@@ -84,8 +84,8 @@ $currentCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
                 <?php endforeach; ?>
             </div>
             <!-- Category Sidebar -->
-            <div class="border-2 rounded-xl p-5">
-                <h3 class="text-xl font-bold mb-3">Product Category</h3>
+            <div class="border-2 rounded-xl p-5 h-full w-[20rem]">
+                <h3 class="text-xl font-bold mb-3 text-center">Product Category</h3>
                 <div class="flex flex-col gap-2 transition-all">
                     <a href="index.php?category=All" class="<?= $currentCategory === 'All' ? 'bg-black text-white' : '' ?> p-2">All</a>
                     <a href="index.php?category=Fruits" class="<?= $currentCategory === 'Fruits' ? 'bg-black text-white' : '' ?> p-2">Fruits</a>

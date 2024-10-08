@@ -115,44 +115,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 
 <body>
 
     <?php include 'header.php'; ?>
 
-    <div class="container mt-5">
-        <h2>Edit Product</h2>
-        <form action="edit_product.php?id=<?php echo $id; ?>" method="POST" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="productName" class="form-label">Product Name</label>
-                <input type="text" class="form-control" id="productName" name="productName" required value="<?php echo htmlspecialchars($productData['name']); ?>">
-            </div>
-            <div class="mb-3">
-                <label for="productCategory" class="form-label">Category</label>
-                <select class="form-select" id="productCategory" name="productCategory" required>
-                    <option value="">Select a category</option>
-                    <option value="Fruits">Fruits</option>
-                    <option value="Vegetables">Vegetables</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="productDescription" class="form-label">Description</label>
-                <textarea class="form-control" id="productDescription" name="productDescription" rows="3" required><?php echo htmlspecialchars($productData['description']); ?></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="productPrice" class="form-label">Price</label>
-                <input type="number" step="0.01" class="form-control" id="productPrice" name="productPrice" required value="<?php echo htmlspecialchars($productData['price']); ?>">
-            </div>
-            <div class="mb-3">
-                <label for="productImage" class="form-label">Product Image (Current: <?php echo htmlspecialchars($productData['image']); ?>)</label>
-                <input type="file" class="form-control" id="productImage" name="productImage" accept="image/*">
-            </div>
-            <button type="submit" class="btn btn-primary">Update Product</button>
-        </form>
-    </div>
+    <main class="flex">
+        <?php include 'sidebar.php'; ?>
+        <div class="m-5 w-full">
+            <h3 class="mb-5 text-2xl font-bold">Edit Product</h3>
+            <form action="edit_product.php?id=<?php echo $id; ?>" method="POST" enctype="multipart/form-data" class="flex flex-col gap-5">
+                <div>
+                    <label for="productName" class="form-label">Product Name</label> <br>
+                    <input value="<?php echo htmlspecialchars($productData['name']); ?>" type="text" class="p-3 border rounded my-1 w-full" id="productName" name="productName" required>
+                </div>
+                <div>
+                    <label for="productCategory" class="form-label">Category</label>
+                    <select class="p-3 border rounded my-1 w-full" id="productCategory" name="productCategory" required>
+                        <option value="Fruits" <?php if ($productData['category'] === 'Fruits') echo 'selected'; ?>>Fruits</option>
+                        <option value="Vegetables" <?php if ($productData['category'] === 'Vegetables') echo 'selected'; ?>>Vegetables</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="productDescription" class="form-label">Description</label>
+                    <textarea class="p-3 border rounded my-1 w-full" id="productDescription" name="productDescription" rows="3" required><?php echo htmlspecialchars($productData['description']); ?></textarea>
+                </div>
+                <div>
+                    <label for="productPrice" class="form-label">Price</label>
+                    <input value="<?php echo htmlspecialchars($productData['price']); ?>" type="number" step="0.01" class="p-3 border rounded my-1 w-full" id="productPrice" name="productPrice" required>
+                </div>
+                <div>
+                    <label for="productImage" class="form-label">Product Image (Current: <?php echo htmlspecialchars($productData['image']); ?>)</label> <br>
+                    <input type="file" id="productImage" name="productImage" accept="image/*">
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Edit Product</button>
+                </div>
+            </form>
+        </div>
+    </main>
 </body>
 
 </html>
