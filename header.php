@@ -1,6 +1,6 @@
   <nav class="bg-black text-white p-5 px-10 flex justify-between items-center print:hidden">
     <div class="flex gap-5 items-center">
-      <a class="text-xl font-bold" href="index.php">ECOMMERCE</a>
+      <a class="text-xl font-bold" href="index.php">PasarSegar.id</a>
       <a href="index.php">Home</a>
     </div>
     <div class="flex gap-3 items-center">
