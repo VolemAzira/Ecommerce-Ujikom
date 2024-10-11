@@ -1,6 +1,7 @@
 <?php
 include 'session_validation.php';
 include 'db.php';
+ 
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -24,7 +25,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     processTransaction($conn, $userInfo, $grandTotal);
     sendFeedback($conn, $userInfo);
     sendEmailReceipt($userInfo, $cart, $grandTotal);
+    clearCart();
+    header("Location: index.php");
+    exit(); 
 }
+
+// Add this function to handle cart clearing
+function clearCart() {
+    $_SESSION['cart'] = [];
+    $_SESSION['message'] = 'Cart cleared.';
+}
+
 
 // Functions
 function getUserInfo($conn, $userId)
@@ -187,7 +198,7 @@ function generateEmailBody($userInfo, $cart, $grandTotal)
     <div class="h-screen w-full fixed top-0 left-0 justify-center items-center hidden flex" id="transactionModal">
         <form method="post" class="bg-white p-8 rounded shadow-lg text-center border flex flex-col gap-5" onsubmit="showTransactionModal();">
             <h5 class="text-xl font-bold">Transaction Successfully!</h5>
-            <textarea name="message" id="message" rows="5" class="p-3 border rounded border-black" required></textarea>
+            <textarea name="message" id="message" rows="5" class="p-3 border rounded border-black" placeholder="Send Your Feedback !!"  required></textarea>
             <p>Check your email for further details about your transaction.</p>
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex">OK</button>
         </form>
