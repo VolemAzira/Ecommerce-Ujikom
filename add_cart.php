@@ -2,37 +2,31 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-function addToCart($productId, $name, $price) {
-    // Check if the cart is already initialized
+function addToCart($productId, $name, $price, $qty) {
     if (!isset($_SESSION['cart'])) {
         $_SESSION['cart'] = array();
     }
 
-    // Check if the product is already in the cart
     if (isset($_SESSION['cart'][$productId])) {
-        // Increase the amount
-        $_SESSION['cart'][$productId]['amount'] += 1;
+        $_SESSION['cart'][$productId]['amount'] += $qty;
     } else {
-        // Add the product to the cart
         $_SESSION['cart'][$productId] = array(
             'name' => $name,
             'price' => $price,
-            'amount' => 1
+            'amount' => $qty
         );
     }
 }
 
-// Check for a POST request to add a product
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add_to_cart'])) {
     $productId = $_POST['product_id'];
     $productName = $_POST['product_name'];
     $productPrice = $_POST['product_price'];
+    $productQty = $_POST['product_qty'];  // Get the selected qty
     
-    // Call the function to add the product
-    addToCart($productId, $productName, $productPrice);
-
-    // Redirect back to the products page or to the cart page
-    header("Location: index.php"); // Adjust as necessary
+    addToCart($productId, $productName, $productPrice, $productQty);
+    
+    header("Location: index.php");
     exit;
 }
 ?>
