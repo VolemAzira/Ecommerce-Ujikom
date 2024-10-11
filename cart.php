@@ -1,6 +1,7 @@
 <?php include 'session_validation.php'; ?>
 
 <?php
+
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = array();
 }
@@ -40,6 +41,7 @@ $totalPrice = 0;
                 <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm">Clear Cart</button>
             </form>
             <table class="w-full text-left table-auto border border-black">
+
                 <thead class="bg-black text-white">
                     <tr>
                         <th class="p-2">Name</th>
@@ -57,14 +59,7 @@ $totalPrice = 0;
                         ?>
                         <tr>
                             <td class="p-2"><?php echo htmlspecialchars($product['name']); ?></td>
-                            <td>
-                                <form action="update_cart_qty.php" method="post" class="flex items-center">
-                                    <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
-                                    <button type="submit" name="action" value="decrease" class="px-2 bg-gray-200 rounded">-</button>
-                                    <span class="mx-2"><?php echo htmlspecialchars($product['amount']); ?></span>
-                                    <button type="submit" name="action" value="increase" class="px-2 bg-gray-200 rounded">+</button>
-                                </form>
-                            </td>
+                            <td><?php echo htmlspecialchars($product['amount']); ?></td>
                             <td>Rp.<?php echo number_format($product['price']); ?></td>
                             <td>Rp.<?php echo number_format($itemTotal); ?></td>
                             <td>
@@ -96,6 +91,7 @@ $totalPrice = 0;
             <p>Your cart is empty.</p>
         <?php endif; ?>
     </main>
+
 
     <?php include 'footer.php' ?>
 </body>
