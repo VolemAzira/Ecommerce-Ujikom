@@ -1,5 +1,4 @@
 <?php include 'session_validation.php'; ?>
-
 <?php
 include 'db.php';
 
@@ -29,7 +28,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- font awesome -->
@@ -48,7 +47,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                 <img src="<?php
                             $str = substr($productDetails['image'], 1);
                             echo $str;
-                            ?>"
+                            ?>" 
                     alt="<?php echo $productDetails['name']; ?>" class="w-[20rem] h-[12rem] rounded-xl shadow-xl">
                 <div class="flex flex-col gap-5">
                     <div>
@@ -59,13 +58,12 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                         <h3 class="text-xl text-green-500">Rp.<?php echo $productDetails['price']; ?></h3>
                     </div>
                     <p><?php echo $productDetails['description']; ?></p>
-                    <form method="POST" action="add_cart.php">
-                        <input type="hidden" name="product_id" value="<?php echo $productDetails['id']; ?>">
-                        <input type="hidden" name="product_name" value="<?php echo $productDetails['name']; ?>">
-                        <input type="hidden" name="product_price" value="<?php echo $productDetails['price']; ?>">
-                        <button type="submit" name="add_to_cart" class="bg-green-500 hover:bg-green-700 text-white p-1 px-2 text-xl rounded">+ Add to cart</button>
-
-                    </form>
+                    
+                    <!-- Button to open modal -->
+                    <button type="button" class="bg-green-500 hover:bg-green-700 text-white p-1 px-2 text-xl rounded" 
+                            onclick="openModal('<?php echo $productDetails['id']; ?>', '<?php echo $productDetails['name']; ?>', '<?php echo $productDetails['price']; ?>', '<?php echo substr($productDetails['image'], 1); ?>')">
+                        + Add to cart
+                    </button>
                 </div>
             <?php else: ?>
                 <p>Product details not available.</p>
@@ -73,7 +71,8 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         </section>
     </main>
 
-    <?php include 'footer.php' ?>
+    <?php include 'add_to_cart_modal.php'; ?>
+    <?php include 'footer.php'; ?>
 </body>
 
 </html>
