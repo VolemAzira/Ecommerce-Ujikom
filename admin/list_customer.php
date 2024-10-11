@@ -34,7 +34,7 @@ if (isset($_SESSION['message'])) {
                             <th class="p-2">No</th>
                             <th>Username</th>
                             <th>Gander</th>
-                            <th>DOB</th>
+                            <th>Date of Birth</th>
                             <th>Email</th>
                             <th>Phone</th>
                             <th class="w-[5rem]"></th>
@@ -52,12 +52,11 @@ if (isset($_SESSION['message'])) {
                                 echo "<td class='p-2'>" . $no++ . "</td>";
                                 echo "<td>" . htmlspecialchars($row["username"]) . "</td>";
                                 echo "<td>" . htmlspecialchars($row["gender"]) . "</td>";
-                                echo "<td>Rp." . htmlspecialchars($row["dob"]) . "</td>";
+                                echo "<td>" . htmlspecialchars($row["dob"]) . "</td>";
                                 echo "<td>" . htmlspecialchars($row["email"]) . "</td>";
                                 echo "<td>" . htmlspecialchars($row["contact_no"]) . "</td>";
                                 echo "<td class='flex gap-2'> 
-                                        <a href='edit_product.php?id=" . htmlspecialchars($row["id"]) . "' class='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-xs'>Edit</a>
-                                        <a href='delete_product.php?id=" . htmlspecialchars($row["id"]) . "' class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-xs'>Delete</a> 
+                                        <a href='delete_customer.php?id=" . htmlspecialchars($row["id"]) . "' class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-xs'>Delete</a> 
                                     </td>";
                                 echo "</tr>";
                             }

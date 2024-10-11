@@ -41,7 +41,6 @@ $totalPrice = 0;
                 <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm">Clear Cart</button>
             </form>
             <table class="w-full text-left table-auto border border-black">
-
                 <thead class="bg-black text-white">
                     <tr>
                         <th class="p-2">Name</th>
@@ -72,24 +71,19 @@ $totalPrice = 0;
                     <?php endforeach; ?>
                 </tbody>
                 <tfoot>
-                    <tr>
+                    <tr class="text-lg">
                         <th colspan="3" class="text-right">Total Price : &nbsp</th>
-                        <th>Rp.<?php echo number_format($totalPrice); ?></th>
+                        <th colspan="2">Rp.<?php echo number_format($totalPrice); ?></th>
                     </tr>
                 </tfoot>
             </table>
-            <form action="process_checkout.php" method="POST">
-                <div>
-                    <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="payment_method" value="Prepaid" required> Prepaid
-                    </label>
-                </div>
-                <div>
-                    <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="payment_method" value="Postpaid" required> Postpaid
-                    </label>
-                </div>
-                <br>
+            <form action="process_checkout.php" method="POST" class="flex gap-5 justify-end">
+                <label class="border-2 rounded-xl py-2 px-4 font-medium">
+                    <input type="radio" name="payment_method" value="Prepaid" required> Prepaid
+                </label>
+                <label class="border-2 rounded-xl py-2 px-4 font-medium">
+                    <input type="radio" name="payment_method" value="Postpaid" required> Postpaid
+                </label>
                 <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Proceed to Checkout</button>
             </form>
         <?php else: ?>

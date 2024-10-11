@@ -5,113 +5,106 @@ include 'db.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php'; // Jika Anda menggunakan Composer
+require 'vendor/autoload.php';
 
-
-// Initialize an array to hold user information
+// Initialize user information
 $userInfo = [];
-
-// Check if the user ID is set in the session
 if (isset($_SESSION['userid'])) {
-    $userId = $_SESSION['userid'];
+    $userInfo = getUserInfo($conn, $_SESSION['userid']);
+} else {
+    exit("No user ID in session.");
+}
 
-    // Prepare a statement to prevent SQL injection
+// Initialize cart and calculate grand total
+$cart = $_SESSION['cart'] ?? [];
+$grandTotal = calculateGrandTotal($cart);
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    processTransaction($conn, $userInfo, $grandTotal);
+    sendFeedback($conn, $userInfo);
+    sendEmailReceipt($userInfo, $cart, $grandTotal);
+}
+
+// Functions
+function getUserInfo($conn, $userId)
+{
     $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
-    $result = $stmt->get_result();
+    return $stmt->get_result()->fetch_assoc() ?? [];
+}
 
-
-
-    if ($result->num_rows > 0) {
-        $userInfo = $result->fetch_assoc();
-    } else {
-        echo "User not found.";
+function calculateGrandTotal($cart)
+{
+    $total = 0;
+    foreach ($cart as $item) {
+        $total += $item['price'] * $item['amount'];
     }
-} else {
-    echo "No user ID in session.";
-}
-// Ensure the cart is initialized
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = array(); // This should be replaced with actual cart data retrieval
+    return $total;
 }
 
-// Calculate the grand total
-$grandTotal = 0;
-foreach ($_SESSION['cart'] as $item) {
-    $grandTotal += $item['price'] * $item['amount'];
+function processTransaction($conn, $userInfo, $grandTotal)
+{
+    $stmt = $conn->prepare("INSERT INTO transaction (name, email, total) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssi", $userInfo['username'], $userInfo['email'], $grandTotal);
+    $stmt->execute();
 }
 
+function sendFeedback($conn, $userInfo)
+{
+    $message = $conn->real_escape_string($_POST['message']);
+    $stmt = $conn->prepare("INSERT INTO feedbacks (name, email, message) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $userInfo['username'], $userInfo['email'], $message);
+    $stmt->execute();
+}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email_user = $userInfo['email']; // Email pengguna dari form
-    $item_price = $grandTotal; // Harga barang
-
-    // Inisialisasi PHPMailer
+function sendEmailReceipt($userInfo, $cart, $grandTotal)
+{
     $mail = new PHPMailer(true);
-
     try {
-        // Server settings
-        $mail->isSMTP(); // Menggunakan SMTP
-        $mail->Host = 'smtp.gmail.com'; // Host SMTP
-        $mail->SMTPAuth = true; // Aktifkan otentikasi SMTP
-        $mail->Username = 'volemalazr@gmail.com'; // Email Anda
-        $mail->Password = 'pdql sdin pgft guog'; // Password email Anda
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Gunakan TLS
-        $mail->Port = 587; // Port TCP untuk TLS
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'volemalazr@gmail.com';
+        $mail->Password = 'pdql sdin pgft guog';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
 
-        // Penerima
-        $mail->setFrom('volemalazr@gmail.com', 'Volem Ecommerce'); // Ganti 'Your Name' sesuai nama Anda
-        $mail->addAddress($email_user); // Email penerima
+        $mail->setFrom('volemalazr@gmail.com', 'Volem Ecommerce');
+        $mail->addAddress($userInfo['email']);
 
-        // Konten email
         $mail->isHTML(true);
         $mail->Subject = 'Transaksi Berhasil';
-        $mail->Body = "
-    Terima kasih telah melakukan transaksi. Berikut adalah detail pembelian Anda:<br><br>
-    
-    <h2>Purchase Summary</h2>
-    <p>Date: " . date('Y-m-d') . "</p>
-    <p>PayPal ID: " . $userInfo['paypal_id'] . "</p>
-    <p>Bank Name: My Bank</p>
-    <p>Payment Method: " . htmlspecialchars($_SESSION['payment_method']) . "</p>
-    <table border='1' cellpadding='5' cellspacing='0'>
-        <tr>
-            <th>Product</th>
-            <th>Amount</th>
-            <th>Price</th>
-            <th>Total</th>
-        </tr>";
+        $mail->Body = generateEmailBody($userInfo, $cart, $grandTotal);
 
-        // Tambahkan produk langsung ke $mail->Body
-        foreach ($_SESSION['cart'] as $product) {
-            $mail->Body .= "
-        <tr>
-            <td>" . $product['name'] . "</td>
-            <td>" . $product['amount'] . "</td>
-            <td>Rp." . number_format($product['price']) . "</td>
-            <td>Rp." . number_format($product['amount'] * $product['price']) . "</td>
-        </tr>";
-        }
-
-        $mail->Body .= "
-        <tr>
-            <th colspan='3'>Grand Total</th>
-            <th>Rp." . number_format($grandTotal) . "</th>
-        </tr>
-    </table>
-    Transaksi Anda telah berhasil. Terima kasih telah berbelanja bersama kami!
-";
-
-
-        // Kirim email
         $mail->send();
     } catch (Exception $e) {
-        echo "Gagal mengirim email. Mailer Error: {$mail->ErrorInfo}";
+        echo "Email failed: {$mail->ErrorInfo}";
     }
 }
 
+function generateEmailBody($userInfo, $cart, $grandTotal)
+{
+    $body = "<h1>PasarSegar.id</h1>
+             <h2>Purchase Summary</h2>
+             <p>Date: " . date('Y-m-d') . "</p>
+             <p>PayPal ID: {$userInfo['paypal_id']}</p>
+             <table border='1' cellpadding='5'>
+                 <tr><th>Product</th><th>Amount</th><th>Price</th><th>Total</th></tr>";
+    foreach ($cart as $product) {
+        $body .= "<tr>
+                      <td>{$product['name']}</td>
+                      <td>{$product['amount']}</td>
+                      <td>Rp." . number_format($product['price']) . "</td>
+                      <td>Rp." . number_format($product['price'] * $product['amount']) . "</td>
+                  </tr>";
+    }
+    $body .= "<tr><th colspan='3'>Grand Total</th><th>Rp." . number_format($grandTotal) . "</th></tr></table>";
+    return $body;
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -184,21 +177,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </tfoot>
             </table>
             <div class="flex justify-end gap-2 print:hidden">
-                <form action="" method="post">
-                    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm" onclick="showTransactionModal();">Pay Now</button>
-                </form>
+                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm" onclick="showTransactionModal();">Pay Now</button>
                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm" onclick="window.print();">Print Invoice</button>
             </div>
         </section>
     </main>
 
     <!-- Modal -->
-    <div class="h-screen w-full fixed top-0 left-0 justify-center items-center hidden" id="transactionModal">
-        <div class="bg-white p-8 rounded shadow-lg text-center border flex flex-col gap-5">
+    <div class="h-screen w-full fixed top-0 left-0 justify-center items-center hidden flex" id="transactionModal">
+        <form method="post" class="bg-white p-8 rounded shadow-lg text-center border flex flex-col gap-5" onsubmit="showTransactionModal();">
             <h5 class="text-xl font-bold">Transaction Successfully!</h5>
+            <textarea name="message" id="message" rows="5" class="p-3 border rounded border-black" required></textarea>
             <p>Check your email for further details about your transaction.</p>
-            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex">OK</button>
-        </div>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex">OK</button>
+        </form>
     </div>
 
     <script>

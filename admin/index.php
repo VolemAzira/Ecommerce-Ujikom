@@ -26,7 +26,7 @@ if (isset($_SESSION['message'])) {
     <main class="flex">
         <?php include 'sidebar.php'; ?>
         <section class="w-full flex flex-col gap-5 m-10">
-            <h3 class="text-2xl font-bold">List Product</h3>
+            <h3 class="text-2xl font-bold">List Products</h3>
             <div>
                 <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="add_product.php">Add Product</a>
             </div>
