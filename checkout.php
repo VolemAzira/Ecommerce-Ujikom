@@ -83,7 +83,7 @@ function sendEmailReceipt($userInfo, $cart, $grandTotal)
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
-        $mail->setFrom('volemalazr@gmail.com', 'Volem Ecommerce');
+        $mail->setFrom('volemalazr@gmail.com', 'PasarSegar.id');
         $mail->addAddress($userInfo['email']);
 
         $mail->isHTML(true);
