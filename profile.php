@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $city = $_POST['city'];
     $contact_no = $_POST['contact_no'];
     $paypal_id = $_POST['paypal_id'];
-    
+
     // Cek apakah password akan diupdate
     if (!empty($_POST['password'])) {
         $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Enkripsi password
@@ -96,15 +96,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Display success or error message from session -->
             <?php if (isset($_SESSION['success_message'])): ?>
                 <div class="alert alert-success col-span-2" role="alert">
-                    <?php 
-                    echo $_SESSION['success_message']; 
+                    <?php
+                    echo $_SESSION['success_message'];
                     unset($_SESSION['success_message']); // Hapus pesan setelah ditampilkan
                     ?>
                 </div>
             <?php elseif (isset($_SESSION['error_message'])): ?>
                 <div class="alert alert-danger col-span-2" role="alert">
-                    <?php 
-                    echo $_SESSION['error_message']; 
+                    <?php
+                    echo $_SESSION['error_message'];
                     unset($_SESSION['error_message']); // Hapus pesan setelah ditampilkan
                     ?>
                 </div>
@@ -160,4 +160,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </main>
 </body>
+
 </html>

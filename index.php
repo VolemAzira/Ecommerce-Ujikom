@@ -43,8 +43,8 @@ $currentCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
             <h1>Hay, <?php echo $_SESSION['username']; ?>! Welcome to our store</h1>
             <p>We Selling fresh fruits and veggies!</p>
         </div>
-        <section class="flex justify-between">
-            <div class="flex gap-5 flex-wrap w-full">
+        <section class="flex lg:flex-row flex-col-reverse justify-between gap-10">
+            <div class="flex gap-5 flex-wrap w-full justify-center lg:justify-start">
                 <?php foreach ($products as $product): ?>
                     <div class="border-2 rounded-xl shadow overflow-hidden max-w-[20rem]">
                         <img src="<?php echo substr($product['image'], 1); ?>" class="w-[20rem] h-[12rem]" alt="<?php echo $product['name']; ?>">
@@ -57,7 +57,7 @@ $currentCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
                             </p>
                             <div class="flex justify-between">
                                 <a href="details.php?id=<?php echo $product['id']; ?>" class="text-blue-500">Detail</a>
-                                <button type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold p-1 px-2 text-xl rounded" 
+                                <button type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold p-1 px-2 text-xl rounded"
                                     onclick="openModal('<?php echo $product['id']; ?>', '<?php echo $product['name']; ?>', '<?php echo $product['price']; ?>', '<?php echo substr($product['image'], 1); ?>')">
                                     +
                                 </button>
@@ -66,7 +66,7 @@ $currentCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
                     </div>
                 <?php endforeach; ?>
             </div>
-            <div class="border-2 rounded-xl p-5 h-full w-[30rem]">
+            <div class="border-2 rounded-xl p-5 h-full w-full lg:w-[30rem]">
                 <h3 class="text-xl font-bold mb-3 text-center">Product Category</h3>
                 <div class="flex flex-col gap-2 transition-all">
                     <a href="index.php?category=All" class="<?= $currentCategory === 'All' ? 'bg-black text-white' : '' ?> p-2">All</a>

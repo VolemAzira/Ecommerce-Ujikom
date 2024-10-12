@@ -39,58 +39,60 @@ $totalPrice = 0;
             <form action="clear_cart.php" method="post">
                 <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm">Clear Cart</button>
             </form>
-            <table class="w-full text-left table-auto border border-black">
-                <thead class="bg-black text-white">
-                    <tr>
-                        <th class="p-2">Name</th>
-                        <th>Amount</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                        <th class="w-[5rem]"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($_SESSION['cart'] as $productId => $product): ?>
-                        <?php
-                        $itemTotal = $product['amount'] * $product['price'];
-                        $totalPrice += $itemTotal;
-                        ?>
+            <div class="overflow-auto">
+                <table class="w-full text-left table-auto border border-black">
+                    <thead class="bg-black text-white">
                         <tr>
-                            <td class="p-2"><?php echo htmlspecialchars($product['name']); ?></td>
-                            <td>
-                                <form action="update_cart_qty.php" method="post" class="flex items-center">
-                                    <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
-                                    <button type="submit" name="action" value="decrease" class="px-2 bg-gray-200 rounded">-</button>
-                                    <span class="mx-2"><?php echo htmlspecialchars($product['amount']); ?></span>
-                                    <button type="submit" name="action" value="increase" class="px-2 bg-gray-200 rounded">+</button>
-                                </form>
-                            </td>
-                            <td>Rp.<?php echo number_format($product['price']); ?></td>
-                            <td>Rp.<?php echo number_format($itemTotal); ?></td>
-                            <td>
-                                <form action="delete_cart_item.php" method="post" class="m-2">
-                                    <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
-                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"><i class="fa fa-trash"></i></button>
-                                </form>
-                            </td>
+                            <th class="p-2">Name</th>
+                            <th>Amount</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th class="w-[5rem]"></th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-                <tfoot>
-                    <tr class="text-lg">
-                        <th colspan="3" class="text-right">Total Price : &nbsp</th>
-                        <th>Rp.<?php echo number_format($totalPrice); ?></th>
-                    </tr>
-                </tfoot>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($_SESSION['cart'] as $productId => $product): ?>
+                            <?php
+                            $itemTotal = $product['amount'] * $product['price'];
+                            $totalPrice += $itemTotal;
+                            ?>
+                            <tr>
+                                <td class="p-2"><?php echo htmlspecialchars($product['name']); ?></td>
+                                <td>
+                                    <form action="update_cart_qty.php" method="post" class="flex items-center">
+                                        <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
+                                        <button type="submit" name="action" value="decrease" class="px-2 bg-gray-200 rounded">-</button>
+                                        <span class="mx-2"><?php echo htmlspecialchars($product['amount']); ?></span>
+                                        <button type="submit" name="action" value="increase" class="px-2 bg-gray-200 rounded">+</button>
+                                    </form>
+                                </td>
+                                <td>Rp.<?php echo number_format($product['price']); ?></td>
+                                <td>Rp.<?php echo number_format($itemTotal); ?></td>
+                                <td>
+                                    <form action="delete_cart_item.php" method="post" class="m-2">
+                                        <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
+                                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"><i class="fa fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr class="text-lg">
+                            <th colspan="3" class="text-right">Total Price : &nbsp</th>
+                            <th>Rp.<?php echo number_format($totalPrice); ?></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
             <form action="process_checkout.php" method="POST" class="flex gap-5 justify-end">
-                <label class="border-2 rounded-xl py-2 px-4 font-medium">
+                <label class="border-2 rounded-xl py-2 px-4 text-sm font-medium">
                     <input type="radio" name="payment_method" value="Prepaid" required> Prepaid
                 </label>
-                <label class="border-2 rounded-xl py-2 px-4 font-medium">
+                <label class="border-2 rounded-xl py-2 px-4 text-sm font-medium">
                     <input type="radio" name="payment_method" value="Postpaid" required> Postpaid
                 </label>
-                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Proceed to Checkout</button>
+                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 text-sm rounded">Proceed to Checkout</button>
             </form>
         <?php else: ?>
             <p>Your cart is empty.</p>
